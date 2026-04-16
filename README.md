@@ -1,95 +1,143 @@
-LS Engine v6 version 1.0.0 beta (Go Port)
-LS Engine is an optimized web server, written in Go, designed to run web applications with advanced features such as WebSockets, dynamic import of JS modules, JavaScript engine (Goja), sharded JSON storage, hardened security, and real-time metrics.
+# LS Engine v6 (Go Port)
 
-Project Structure
+**LS Engine** is an optimized web server written in Go, designed to run web applications with advanced features such as WebSockets, dynamic JS module imports, a JavaScript engine (Goja), sharded JSON storage, enhanced security, and real-time metrics.
+
+## Project Structure
+
+```
 lsengine/
 ├── api/
-│   └── routes.go               # Definicion de rutas de la API
+│   └── routes.go               # API route definitions
 ├── cmd/
-│   └── main.go                 # Punto de entrada principal
+│   └── main.go                 # Main entry point
 ├── internal/
-│   ├── cache/                  # Sistema de cache (memoria/Redis)
-│   ├── cluster/                # Gestion de cluster (workers)
-│   ├── config/                 # Carga y validacion de configuracion
-│   ├── imports/                # Procesador de imports JS (import {x} from ...)
-│   ├── jsondb/                 # Base de datos JSON con sharding y B-Tree
-│   ├── metrics/                # Metricas internas y Prometheus
+│   ├── cache/                  # Cache system (memory/Redis)
+│   ├── cluster/                # Cluster management (workers)
+│   ├── config/                 # Configuration loading and validation
+│   ├── imports/                # JS import processor (import {x} from ...)
+│   ├── jsondb/                 # JSON database with sharding and B-Tree
+│   ├── metrics/                # Internal metrics and Prometheus
 │   ├── middleware/             # Middleware (CORS, rate limit, logging)
-│   ├── security/               # Validacion de rutas, contenidos y politicas
-│   ├── server/                 # Servidor HTTP principal
-│   ├── utils/                  # Utilidades comunes
-│   ├── vm/                     # Pool de maquinas virtuales Goja (JS)
-│   └── websocket/              # Gestion de conexiones WebSocket
-├── app.json                    # Configuracion principal de la app
-├── go.mod                      # Dependencias Go
-├── go.sum                      # Checksums de dependencias
-├── start.bat                   # Script de compilacion para Windows
-├── start.sh                    # Script de compilacion para Linux
-└── index.html                  # Pagina por defecto (entry point)
-Main Features
-HTTP server with support for Gzip compression, CORS, configurable timeouts.
-WebSockets with broadcast, ping/pong, connection limit.
-JavaScript engine (Goja) with sandbox, VM pool and native APIs (ls.app, ls.http, ls.crypto, etc.).
-Dynamic import of JS modules using <script to-call>, <script ls>, <script ls-ws> and import {x} from "archivo.js".
-Sharded JSON database (SQLite per shard) with B-Tree indexes and paginated queries.
-Security: route validation, remote import blocking, input sanitization, CSP, HSTS.
-Metrics: real-time statistics, endpoint /metrics (JSON or Prometheus).
-Cluster mode (workers) for greater scalability.
-Distributed cache (Redis) or in memory.
-Hot reload opcional (configurable).
-Prerequisites
-Go 1.21 or higher (1.25+ recommended)
-Git (optional, to clone the repository)
-Make (optional, if you use Makefile)
-Redis (optional, only if you use distributed caching)
-Compilation and Execution
-Windows (cmd / PowerShell)
-Open a terminal in the project root directory.
-Run the compilation script:
+│   ├── security/               # Path, content and policy validation
+│   ├── server/                 # Main HTTP server
+│   ├── utils/                  # Common utilities
+│   ├── vm/                     # Goja VM pool (JavaScript)
+│   └── websocket/              # WebSocket connection management
+├── app.json                    # Main application configuration
+├── go.mod                      # Go dependencies
+├── go.sum                      # Dependency checksums
+├── start.bat                   # Compilation script for Windows
+├── start.sh                    # Compilation script for Linux
+└── index.html                  # Default page (entry point)
+```
+
+## Key Features
+
+- HTTP server with Gzip compression, CORS, configurable timeouts.
+- WebSockets with broadcast, ping/pong, connection limits.
+- JavaScript engine (Goja) with sandbox, VM pool and native APIs (ls.app, ls.http, ls.crypto, etc.).
+- Dynamic JS module import using <script to-call>, <script ls>, <script ls-ws> and import {x} from "file.js".
+- Sharded JSON database (SQLite per shard) with B-Tree indexes and paginated queries.
+- Security: path validation, remote import blocking, input sanitization, CSP, HSTS.
+- Metrics: real-time statistics, /metrics endpoint (JSON or Prometheus).
+- Cluster mode (workers) for better scalability.
+- Distributed cache (Redis) or in-memory.
+- Optional hot reload (configurable).
+
+## Prerequisites
+
+- Go 1.21 or higher (recommended 1.25+)
+- Git (optional, for cloning the repository)
+- Make (optional, if using a Makefile)
+- Redis (optional, only for distributed cache)
+
+## Compilation and Execution
+
+### Windows (cmd / PowerShell)
+
+1. Open a terminal in the project root.
+2. Run the compilation script:
+
+```batch
 start.bat
-If the compilation is successful, lsengine.exe will be generated.
-Run the server:
+```
+
+3. If compilation is successful, `lsengine.exe` will be generated.
+4. Run the server:
+
+```batch
 lsengine.exe
+```
+
 You can also compile manually:
 
+```batch
 go mod tidy
 go build -ldflags="-s -w" -o lsengine.exe ./cmd/main.go
-Linux / macOS (bash)
-Grant execution permissions to the script (only the first time):
+```
+
+### Linux / macOS (bash)
+
+1. Give execution permissions to the script (first time only):
+
+```bash
 chmod +x start.sh
-Run the compilation script:
+```
+
+2. Run the compilation script:
+
+```bash
 ./start.sh
-The lsengine binary will be generated (without extension).
-Run the server:
+```
+
+3. The binary `lsengine` (no extension) will be generated.
+4. Run the server:
+
+```bash
 ./lsengine
+```
+
 Manual compilation:
 
+```bash
 go mod tidy
 go build -ldflags="-s -w" -o lsengine ./cmd/main.go
-Rapid Test
-Once the server is running, open your browser to:
+```
 
+## Quick Test
+
+Once the server is running, open your browser at:
+
+```
 http://localhost:1505
+```
+
 Useful endpoints:
 
-http://localhost:1505/health -> Health status
-http://localhost:1505/metrics -> Metricas (JSON)
-http://localhost:1505/metrics?format=prometheus -> Metricas para Prometheus
-http://localhost:1505/upload -> Uploading files (multipart POST)
-http://localhost:1505/stream -> Server-Sent Events (keepalive)
-http://localhost:1505/ws -> WebSocket
-Main Departments
-Package	Use
-github.com/dop251/goja	Motor JavaScript
-github.com/gorilla/websocket	WebSockets
-github.com/prometheus/client_golang	Metricas Prometheus
-github.com/go-redis/redis/v8	Distributed cache
-github.com/mattn/go-sqlite3	sharded JSON storage
-golang.org/x/time/rate	Rate limiting
-golang.org/x/sync	Singleflight, semaforos
-Configuration (app.json)
-The app.json file is automatically generated on the first run. Some key values:
+- http://localhost:1505/health -> Health status
+- http://localhost:1505/metrics -> Metrics (JSON)
+- http://localhost:1505/metrics?format=prometheus -> Metrics for Prometheus
+- http://localhost:1505/upload -> File upload (POST multipart)
+- http://localhost:1505/stream -> Server-Sent Events (keepalive)
+- http://localhost:1505/ws -> WebSocket
 
+## Main Dependencies
+
+| Package | Usage |
+|--------|-------|
+| github.com/dop251/goja | JavaScript engine |
+| github.com/gorilla/websocket | WebSockets |
+| github.com/prometheus/client_golang | Prometheus metrics |
+| github.com/go-redis/redis/v8 | Distributed cache |
+| github.com/mattn/go-sqlite3 | Sharded JSON storage |
+| golang.org/x/time/rate | Rate limiting |
+| golang.org/x/sync | Singleflight, semaphores |
+
+## Configuration (app.json)
+
+The `app.json` file is automatically generated on first run. Key values include:
+
+```json
 {
   "port": ":1505",
   "maxVM": 500,
@@ -111,31 +159,39 @@ The app.json file is automatically generated on the first run. Some key values:
     "allowedSubdirs": ["js", "modules", "src", "lib"]
   }
 }
-You can modify app.json without recompiling.
+```
 
-Solving Common Problems
-go: command not found
-Install Go from golang.org and make sure it's in your PATH.
+You can modify `app.json` without recompiling.
 
-Port in use
-Change the port in app.json or using the PORT environment variable:
+## Common Issues and Solutions
 
+### go: command not found
+Install Go from golang.org and make sure it is in your PATH.
+
+### Port already in use
+Change the port in `app.json` or using the `PORT` environment variable:
+
+```bash
 export PORT=8080   # Linux/macOS
 set PORT=8080      # Windows cmd
-Error cannot find package
-Execute:
+```
 
+### Error cannot find package
+Run:
+
+```bash
 go mod tidy
 go mod download
-The compilation fails on Windows with "gcc"
-The mattn/go-sqlite3 driver requires GCC (e.g., TDM-GCC or MinGW-w64).
-Alternative: use compilation with the `-tags` attribute: `sqlite_omit_load_extension`.
+```
 
-License
-MIT – see LICENSE file (if applicable). By default, the project is distributed under the MIT license.
+### Compilation fails on Windows with "gcc"
+The driver `mattn/go-sqlite3` requires GCC (e.g., TDM-GCC or MinGW-w64).  
+Alternative: compile with the tag `-tags sqlite_omit_load_extension`.
 
-Author
-LS User – Proyecto LS Engine v6.0 (Go Port)
+## License
 
-Contributions
-Contributions are welcome. Please open an issue or pull request to help improve the engine.
+MIT – see the `LICENSE` file (if applicable). By default, the project is distributed under the MIT license.
+
+## Author
+
+LS User – LS Engine v6 (Go Port)
