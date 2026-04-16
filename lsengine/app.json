@@ -1,0 +1,97 @@
+{
+  "name": "lsengine",
+  "version": "1.0.0",
+  "port": ":1505",
+  "ports": [
+    ":1505",
+    ":1506"
+  ],
+  "entryPoint": "index.html",
+  "author": "LS User",
+  "license": "MIT",
+  "indie": true,
+  "main": "index.html",
+  "server": "server.js",
+  "maxVM": 500,
+  "maxWS": 10000,
+  "tls": null,
+  "ipv6": true,
+  "keepAlive": 60,
+  "compression": true,
+  "brotli": false,
+  "maxUploadSize": 10485760,
+  "rateLimit": 100,
+  "cors": {
+    "enabled": true,
+    "allowedOrigins": [
+      "*"
+    ],
+    "allowedMethods": [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+      "OPTIONS"
+    ],
+    "allowedHeaders": [
+      "Content-Type",
+      "Authorization"
+    ]
+  },
+  "security": {
+    "csp": "default-src 'self'",
+    "hsts": true,
+    "xFrameOptions": "DENY",
+    "csrf": true,
+    "inputSanitize": true,
+    "permissions": [
+      "fs_read"
+    ]
+  },
+  "cluster": null,
+  "plugins": null,
+  "cache": {
+    "enabled": true,
+    "type": "memory",
+    "size": 1000,
+    "ttl": 300000000000,
+    "distributed": false,
+    "redisUrl": ""
+  },
+  "logging": {
+    "level": "info",
+    "format": "text",
+    "outputs": [
+      "stdout",
+      "file"
+    ],
+    "structured": true
+  },
+  "metrics": null,
+  "database": null,
+  "graphql": null,
+  "process": {
+    "memoryLimit": 536870912,
+    "cpuQuota": 100,
+    "maxProcesses": 10,
+    "sandboxEnabled": true
+  },
+  "environment": "development",
+  "hotReload": false,
+  "routes": null,
+  "middleware": null,
+  "importSecurity": {
+    "allowRemoteImports": false,
+    "allowedSubdirs": [
+      "js",
+      "public",
+      "public/js",
+      "modules",
+      "scripts",
+      "src",
+      "lib"
+    ],
+    "maxFileSize": 1048576,
+    "maxImportsPerFile": 50
+  }
+}
